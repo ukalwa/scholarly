@@ -1,0 +1,30 @@
+{
+  "name": "scholarly",
+  "version": "0.0.1",
+  "description": "A library to query and parse academic articles from Google Scholar and Microsoft Academic",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ukalwa/scholarly.git"
+  },
+  "keywords": [
+    "google",
+    "scholar",
+    "publications",
+    "research",
+    "academic",
+    "parser"
+  ],
+  "author": "Upender Kalwa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ukalwa/scholarly/issues"
+  },
+  "homepage": "https://github.com/ukalwa/scholarly#readme",
+  "devDependencies": {
+    "typescript": "^3.8.3"
+  }
+}
