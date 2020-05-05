@@ -1,4 +1,4 @@
-import * as googleScholar from "./googleScholar";
+import googleScholar from "./googleScholar";
 
 googleScholar.search("machine learning");
-googleScholar.getUserProfile("machine learning");
+googleScholar.user("machine learning");

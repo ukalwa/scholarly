@@ -3,11 +3,12 @@
   "version": "0.0.1",
   "description": "A library to query and parse academic articles from Google Scholar and Microsoft Academic",
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc",
+    "build": "tsc",
     "tsc:w": "tsc -w",
-    "start": "node ."
+    "start": "npm run build && node ."
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,11 @@
   },
   "homepage": "https://github.com/ukalwa/scholarly#readme",
   "devDependencies": {
+    "@types/cheerio": "^0.22.18",
     "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "cheerio": "^1.0.0-rc.3"
   }
 }
