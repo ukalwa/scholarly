@@ -10,7 +10,7 @@ import { parseUserArticle } from "./user";
  * @class _googleScholar
  * @extends {ArticleParser}
  */
-class _googleScholar {
+class GoogleScholar {
   baseUrl = "http://scholar.google.com";
   searchTags: IHTMLTags = {
     results: ".gs_r",
@@ -35,9 +35,8 @@ class _googleScholar {
    *
    *
    * @param {string} query
-   * @param {boolean} [all=false]
    */
-  search = async (query: string, all: boolean = false) => {
+  search = async (query: string): Promise<IArticle[]> => {
     let articles: IArticle[] = [];
     try {
       if (query === "") {
@@ -62,7 +61,7 @@ class _googleScholar {
    *
    * @param {string} profile
    */
-  user = async (profile: string) => {
+  user = async (profile: string): Promise<IArticle[]> => {
     let articles: IArticle[] = [];
     try {
       if (profile === "") {
@@ -84,5 +83,5 @@ class _googleScholar {
   };
 }
 
-const googleScholar = new _googleScholar();
+const googleScholar = new GoogleScholar();
 export default googleScholar;

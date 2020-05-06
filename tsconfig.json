@@ -1,6 +1,6 @@
 {
-  "include": ["./lib/**/*.ts"],
-  "exclude": ["tests", "node_modules", "dist"],
+  "include": ["./lib/**/*.ts", "./tests/**/*.ts"],
+  "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     /* Basic Options */
     // "incremental": true,                   /* Enable incremental compilation */
