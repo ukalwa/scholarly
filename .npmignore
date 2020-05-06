@@ -1,0 +1,9 @@
+.vscode/
+
+lib/
+
+tests/
+
+coverage/
+
+.nyc_output/
