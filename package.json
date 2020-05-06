@@ -1,6 +1,6 @@
 {
   "name": "scholarly",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "A library to query and parse academic articles from Google Scholar and Microsoft Academic",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
