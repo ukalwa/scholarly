@@ -1,11 +1,11 @@
 {
   "name": "scholarly",
-  "version": "1.0.9",
+  "version": "1.0.8",
   "description": "A library to query and parse academic articles from Google Scholar and Microsoft Academic",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "nyc ava",
+    "test": "npm run clean && nyc ava",
     "clean": "rimraf dist",
     "lint": "eslint ./lib/**/*.ts ./tests/**/*.ts --fix",
     "prebuild": "npm run lint && npm run test",
