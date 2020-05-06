@@ -22,7 +22,6 @@ class _googleScholar extends ArticleParser {
     footers: ".gs_ri .gs_fl a",
     description: ".gs_ri .gs_rs",
     pdf: ".gs_ggsd a",
-    year: "",
   };
 
   userTags: IHTMLTags = {
@@ -30,7 +29,6 @@ class _googleScholar extends ArticleParser {
     title: ".gsc_a_t a",
     url: ".gs_ri h3 a",
     authors: ".gs_gray",
-    footers: ".gsc_a_c a",
     year: ".gsc_a_y",
     citations: ".gsc_a_c",
   };
@@ -49,7 +47,6 @@ class _googleScholar extends ArticleParser {
       article.description = this.$(div).find(tags.description!).text();
       article.pdf = this.$(this.$(div).find(tags.pdf!)[0]).attr("href");
       this.parseFooterLinks(this.$(div).find(tags.footers!), article);
-      console.log(article);
       this.parsePublicationTag(this.$(div).find(tags.authors), article);
       return article;
     }
