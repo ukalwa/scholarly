@@ -1,85 +1,69 @@
 import cheerio from "cheerio";
+import { IAuthorInfo, IArticle, IArticleLinks, IHTMLTags } from "./interfaces";
 
-export class Article {
+export class Article implements IArticle, IArticleLinks {
   title = "";
-  url: string | undefined = "";
-  authors = [""];
+  url? = "";
+  authors: string[] = [];
   year = 0;
-  numCitations = 0;
-  pdf: string | undefined = "";
-  urlVersionsList = "";
-  citationUrl = "";
-  relatedUrl = "";
-  description = "";
-  publication: string | undefined = "";
+  numCitations? = 0;
+  pdf?: string;
+  urlVersionsList?: string;
+  citationUrl?: string;
+  relatedUrl?: string;
+  description?: string;
+  publication?: string;
+  journal?: string;
+  volume?: number;
+  issue?: number;
+  pages?: string;
 }
 
-export interface IFooterLinks {
-  citationUrl: string;
-  relatedUrl: string;
-  numCitations: number;
-  urlVersionsList: string;
-}
-
-export interface IPublicationInfo {
-  authors: string[];
-  year: number;
-  publication: string | undefined;
-  authorLinks: string[];
-}
+export const AuthorTags: IAuthorInfo = {
+  allCitations: 0,
+  hIndex: 0,
+  i10Index: 0,
+  interests: [],
+};
 
 export abstract class ArticleParser {
-  articles: Article[] = [];
+  articles: IArticle[] = [];
   baseUrl: string | null = null;
   $: CheerioStatic | null = null;
 
-  parse = (html: string, tags: HTMLTags) => {
+  parseScholarArticle = (html: string, tags: IHTMLTags) => {
     this.$ = cheerio.load(html);
     const allResults = this.$(tags.results);
     allResults.each((idx, div) => {
-      const article = this.parseSingleArticle(div, tags);
+      const article = this._parseScholarArticle(div, tags);
       if (article && article.title !== "") this.articles.push(article);
     });
   };
 
-  abstract parseFooterLinks(div: Cheerio): IFooterLinks;
+  parseUserArticle = (html: string, tags: IHTMLTags) => {
+    this.$ = cheerio.load(html);
+    const allResults = this.$(tags.results);
+    allResults.each((idx, div) => {
+      const article = this._parseUserArticle(div, tags);
+      if (article && article.title !== "") this.articles.push(article);
+    });
+  };
 
-  abstract parsePublicationTag(div: Cheerio): IPublicationInfo;
+  abstract parseFooterLinks(div: Cheerio, article: Article): void;
 
-  abstract parseSingleArticle(
+  abstract parsePublicationTag(div: Cheerio, article: Article): void;
+
+  abstract _parseUserArticle(
     div: CheerioElement,
-    tags: HTMLTags
-  ): Article | undefined;
+    tags: IHTMLTags
+  ): IArticle | undefined;
+
+  abstract _parseScholarArticle(
+    div: CheerioElement,
+    tags: IHTMLTags
+  ): IArticle | undefined;
 
   abstract search(query: string): void;
   abstract user(query: string): void;
   abstract all(query: string): void;
-}
-
-export class HTMLTags {
-  results: string;
-  title: string;
-  url: string;
-  authors: string;
-  footers: string;
-  description: string;
-  pdf: string;
-
-  constructor(
-    results = "",
-    title = "",
-    url = "",
-    authors = "",
-    footers = "",
-    description = "",
-    pdf = ""
-  ) {
-    this.results = results;
-    this.title = title;
-    this.url = url;
-    this.authors = authors;
-    this.footers = footers;
-    this.description = description;
-    this.pdf = pdf;
-  }
 }

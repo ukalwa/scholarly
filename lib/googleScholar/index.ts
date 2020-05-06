@@ -1,11 +1,7 @@
-import {
-  ArticleParser,
-  HTMLTags,
-  Article,
-  IPublicationInfo,
-  IFooterLinks,
-} from "../config";
+import { ArticleParser, Article } from "../config";
 import axios from "axios";
+import { IHTMLTags } from "../interfaces";
+import { splitJournalVolumeString, splitVolumeIssueString } from "../utils";
 
 /**
  *
@@ -18,22 +14,26 @@ class _googleScholar extends ArticleParser {
   apiInstance = axios.create({
     baseURL: this.baseUrl,
   });
-  searchTags = new HTMLTags(
-    ".gs_r",
-    ".gs_ri h3 a",
-    ".gs_ri h3 a",
-    ".gs_ri .gs_a",
-    ".gs_ri .gs_fl a",
-    ".gs_ri .gs_rs",
-    ".gs_ggsd a"
-  );
-  userTags = new HTMLTags(
-    ".gsc_a_tr",
-    ".gsc_a_t a",
-    ".gs_ri h3 a",
-    ".gs_gray",
-    ".gsc_a_c a"
-  );
+  searchTags: IHTMLTags = {
+    results: ".gs_r",
+    title: ".gs_ri h3 a",
+    url: ".gs_ri h3 a",
+    authors: ".gs_ri .gs_a",
+    footers: ".gs_ri .gs_fl a",
+    description: ".gs_ri .gs_rs",
+    pdf: ".gs_ggsd a",
+    year: "",
+  };
+
+  userTags: IHTMLTags = {
+    results: ".gsc_a_tr",
+    title: ".gsc_a_t a",
+    url: ".gs_ri h3 a",
+    authors: ".gs_gray",
+    footers: ".gsc_a_c a",
+    year: ".gsc_a_y",
+    citations: ".gsc_a_c",
+  };
 
   /**
    *
@@ -41,26 +41,47 @@ class _googleScholar extends ArticleParser {
    * @memberof _googleScholar
    * @param {CheerioElement} div
    */
-  parseSingleArticle = (div: CheerioElement, tags: HTMLTags) => {
+  _parseScholarArticle = (div: CheerioElement, tags: IHTMLTags) => {
     if (this.$) {
       const article = new Article();
       article.title = this.$(div).find(tags.title).text().trim();
       article.url = this.$(div).find(tags.url).attr("href");
-      article.description = this.$(div).find(tags.description).text();
-      // article.footerLinks = this.$(div).find(tags.footers);
-      const footerLinks = this.parseFooterLinks(this.$(div).find(tags.footers));
-      article.citationUrl = footerLinks.citationUrl;
-      article.relatedUrl = footerLinks.relatedUrl;
-      article.numCitations = footerLinks.numCitations;
-      article.urlVersionsList = footerLinks.urlVersionsList;
+      article.description = this.$(div).find(tags.description!).text();
+      article.pdf = this.$(this.$(div).find(tags.pdf!)[0]).attr("href");
+      this.parseFooterLinks(this.$(div).find(tags.footers!), article);
+      console.log(article);
+      this.parsePublicationTag(this.$(div).find(tags.authors), article);
+      return article;
+    }
+  };
 
-      const publicationInfo = this.parsePublicationTag(
-        this.$(div).find(tags.authors)
-      );
-      article.authors = publicationInfo.authors;
-      article.year = publicationInfo.year;
-      article.publication = publicationInfo.publication;
-      article.pdf = this.$(this.$(div).find(tags.pdf)[0]).attr("href");
+  /**
+   *
+   *
+   * @memberof _googleScholar
+   * @param {CheerioElement} div
+   */
+  _parseUserArticle = (div: CheerioElement, tags: IHTMLTags) => {
+    if (this.$) {
+      const article = new Article();
+      article.title = this.$(div).find(tags.title).text().trim();
+      article.year = parseInt(this.$(div).find(tags.year!).text());
+      article.numCitations =
+        parseInt(this.$(div).find(tags.citations!).text()) || 0;
+      const articleData = this.$(div).find(tags.authors);
+      article.authors = this.$(articleData[0]).text().split(",");
+      // Remove hidden year attribute
+      this.$(articleData[1]).find(".gs_oph").remove();
+      let htmlString = this.$(articleData[1]).text().trim();
+      let idx = splitJournalVolumeString(htmlString);
+      article.journal = htmlString.slice(0, idx).trim();
+      htmlString = htmlString.substr(idx);
+      if (htmlString === "") return article;
+      const articleTokens = htmlString.split(",");
+      const { volume, issue } = splitVolumeIssueString(articleTokens[0]);
+      article.volume = volume;
+      article.issue = issue;
+      if (articleTokens.length > 1) article.pages = articleTokens[1].trim();
       return article;
     }
   };
@@ -71,17 +92,11 @@ class _googleScholar extends ArticleParser {
    * @memberof _googleScholar
    * @param {Cheerio} div
    */
-  parsePublicationTag = (div: Cheerio) => {
-    const publicationInfo: IPublicationInfo = {
-      authorLinks: [],
-      authors: [],
-      year: 1900,
-      publication: "",
-    };
+  parsePublicationTag = (div: Cheerio, article: Article) => {
     if (this.$) {
       let authorHTMLString = this.$(div).text();
       if (authorHTMLString === "") {
-        return publicationInfo;
+        return;
       }
       // Author Tag format (author1, author2 - publication, year - journal)
       let author = "";
@@ -89,7 +104,7 @@ class _googleScholar extends ArticleParser {
       for (let idx = 0; idx < authorHTMLString.length; idx++) {
         const char = authorHTMLString[idx];
         if (char === "," || char === "-" || idx === ellipsisIdx) {
-          publicationInfo.authors.push(author.trim());
+          article.authors.push(author.trim());
           if (char !== ",") {
             authorHTMLString = authorHTMLString.substr(
               idx === ellipsisIdx ? idx + 3 : idx + 1
@@ -101,11 +116,11 @@ class _googleScholar extends ArticleParser {
         }
       }
       const splitData = authorHTMLString.split(" - ");
-      publicationInfo.publication = splitData.pop()?.trim();
+      article.publication = splitData.pop()?.trim();
       let year = splitData.pop()!.substr(-5).trim();
-      publicationInfo.year = parseInt(year);
+      article.year = parseInt(year);
     }
-    return publicationInfo;
+    return;
   };
 
   /**
@@ -114,32 +129,25 @@ class _googleScholar extends ArticleParser {
    * @memberof _googleScholar
    * @param {Cheerio} div
    */
-  parseFooterLinks = (div: Cheerio) => {
-    const links: IFooterLinks = {
-      citationUrl: "",
-      relatedUrl: "",
-      numCitations: 0,
-      urlVersionsList: "",
-    };
+  parseFooterLinks = (div: Cheerio, article: Article) => {
     if (this.$) {
       this.$(div).each((idx, el) => {
         if (this.$) {
           const href = this.$(el).attr("href");
           if (href!.indexOf("/scholar?cites") >= 0) {
             const citationCountPrefix = "Cited by ";
-            links.citationUrl = this.baseUrl + href!;
-            links.numCitations = parseInt(
+            article.citationUrl = this.baseUrl + href!;
+            article.numCitations = parseInt(
               this.$(el).text().substr(citationCountPrefix.length)
             );
           } else if (href!.indexOf("/scholar?q=related") >= 0) {
-            links.relatedUrl = this.baseUrl + href!;
+            article.relatedUrl = this.baseUrl + href!;
           } else if (href!.indexOf("/scholar?cluster") >= 0) {
-            links.urlVersionsList = this.baseUrl + href!;
+            article.urlVersionsList = this.baseUrl + href!;
           }
         }
       });
     }
-    return links;
   };
 
   /**
@@ -159,8 +167,8 @@ class _googleScholar extends ArticleParser {
         throw new Error(result.statusText);
       }
       const data: string = result.data;
-      this.parse(data, this.searchTags);
-      console.log(this.articles);
+      this.parseScholarArticle(data, this.searchTags);
+      return this.articles;
     } catch (e) {
       console.error(e.message);
     }
@@ -169,10 +177,25 @@ class _googleScholar extends ArticleParser {
   /**
    *
    *
-   * @param {string} query
+   * @param {string} profile
    */
-  user = (query: string) => {
-    console.log(query);
+  user = async (profile: string) => {
+    try {
+      if (profile === "") {
+        throw new Error("User cannot be empty!");
+      }
+      const profileUrl = encodeURI(`/citations?hl=en&user=${profile}`);
+      const result = await axios.get(this.baseUrl + profileUrl);
+      if (result.status !== 200) {
+        throw new Error(result.statusText);
+      }
+      // Get HTML string
+      const data: string = result.data;
+      this.parseUserArticle(data, this.userTags);
+      return this.articles;
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   /**
