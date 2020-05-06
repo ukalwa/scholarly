@@ -1,11 +1,11 @@
 {
   "name": "scholarly",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A library to query and parse academic articles from Google Scholar and Microsoft Academic",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "nyc ava",
     "build": "tsc",
     "tsc:w": "tsc -w",
     "start": "npm run build && node ."
@@ -30,10 +30,38 @@
   "homepage": "https://github.com/ukalwa/scholarly#readme",
   "devDependencies": {
     "@types/cheerio": "^0.22.18",
+    "ava": "^3.8.1",
+    "nyc": "^15.0.1",
+    "ts-node": "^8.10.1",
     "typescript": "^3.8.3"
   },
   "dependencies": {
     "axios": "^0.19.2",
     "cheerio": "^1.0.0-rc.3"
+  },
+  "ava": {
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
+  },
+  "nyc": {
+    "include": [
+      "lib/**/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "sourceMap": true,
+    "instrument": true
   }
 }
