@@ -1,4 +1,4 @@
-import { IArticle, IArticleLinks, IAuthorInfo, IHTMLTags } from "./interfaces";
+import { IArticle, IArticleLinks, IAuthorInfo } from "./interfaces";
 
 export class Article implements IArticle, IArticleLinks {
   title = "";
