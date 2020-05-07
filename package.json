@@ -2,8 +2,8 @@
   "name": "scholarly",
   "version": "1.0.12",
   "description": "A library to query and parse academic articles from Google Scholar and Microsoft Academic",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
   "scripts": {
     "test": "npm run clean && nyc ava",
     "clean": "rimraf dist",
@@ -77,6 +77,6 @@
     "instrument": true
   },
   "files": [
-    "dist"
+    "dist/lib"
   ]
 }
