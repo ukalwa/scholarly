@@ -2,11 +2,15 @@ import * as scholarly from "../lib";
 
 import test from "ava";
 
+import randomWords = require("random-words");
+
 test("search should resolve and return an Array", async (t) => {
   try {
-    const data = await scholarly.search("machine learning");
+    const data = await scholarly.search(
+      randomWords({ exactly: 1, wordsPerString: 2 })[0]
+    );
     // Retrieve first 10 results
-    Array.isArray(data) && data.length === 10
+    Array.isArray(data) && data.length > 0
       ? t.pass()
       : t.fail("Number of results != 10");
   } catch (e) {
