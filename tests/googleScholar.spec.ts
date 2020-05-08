@@ -26,7 +26,16 @@ test("search should resolve and return an Array", async (t) => {
 
 test("user profile search should resolve and return an Array", async (t) => {
   try {
-    const data = await scholarly.user("H18-9fkAAAAJ");
+    const users = [
+      "llxuy7kAAAAJ",
+      "H18-9fkAAAAJ",
+      "JCmLp2kAAAAJ",
+      "_WCWcNAAAAAJ",
+      "caYyccYAAAAJ",
+    ];
+    const data = await scholarly.user(
+      users[Math.floor(Math.random() * users.length)]
+    );
     if (!data) t.fail("Unable to access google scholar website");
     Array.isArray(data) && data.length > 0 ? t.pass() : t.fail();
   } catch (e) {
