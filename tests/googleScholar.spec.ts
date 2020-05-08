@@ -19,6 +19,9 @@ test("search should resolve and return an Array", async (t) => {
 
 test("user profile search should resolve and return an Array", async (t) => {
   try {
+    // Sending too many requests to google API is throwing a 429 error.
+    // Fix it by delaying the execution of next test
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     const data = await scholarly.user("H18-9fkAAAAJ");
     if (!data) t.fail("Unable to access google scholar website");
     Array.isArray(data) && data.length > 0 ? t.pass() : t.fail();
