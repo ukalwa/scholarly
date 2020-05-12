@@ -44,7 +44,6 @@ test("user profile search should resolve and return an Array", async (t) => {
       .onGet("https://scholar.google.com/citations?hl=en&user=test-user")
       .reply(200, fs.readFileSync(__dirname + "/profileData.txt", "utf-8"));
     const data = await scholarly.user("test-user");
-    console.log(data);
     Array.isArray(data) && data.length > 0 ? t.pass() : t.fail();
   } catch (e) {
     // Ignore error due to Rate Limiting (too many requests in succession) by Google APIs
