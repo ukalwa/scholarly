@@ -11,7 +11,7 @@ import { parseUserArticle } from "./user";
  * @extends {ArticleParser}
  */
 class GoogleScholar {
-  baseUrl = "http://scholar.google.com";
+  baseUrl = "https://scholar.google.com";
   searchTags: IHTMLTags = {
     results: ".gs_r",
     title: ".gs_ri h3 a",
