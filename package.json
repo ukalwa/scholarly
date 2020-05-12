@@ -1,16 +1,17 @@
 {
   "name": "scholarly",
-  "version": "1.0.14",
+  "version": "1.0.16",
   "description": "A library to query and parse academic articles from Google Scholar",
   "main": "./dist/lib/index.js",
   "types": "./dist/lib/index.d.ts",
   "scripts": {
-    "test": "npm run clean && cross-env TS_NODE_FILES=true nyc ava",
-    "clean": "rimraf dist",
+    "test": "npm run clean && nyc ava",
+    "clean": "rimraf dist coverage .nyc_output",
     "lint": "eslint ./lib/**/*.ts ./tests/**/*.ts --fix",
     "prebuild": "npm run lint && npm run test",
     "build": "npm run clean && tsc",
     "tsc:w": "tsc -w",
+    "prepublishOnly": "npm run build",
     "report-coverage": "nyc report --reporter=text-lcov > coverage/coverage.lcov && codecov"
   },
   "repository": {
@@ -36,6 +37,7 @@
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
     "ava": "^3.8.1",
+    "axios-mock-adapter": "^1.18.1",
     "codecov": "^3.6.5",
     "cross-env": "^7.0.2",
     "eslint": "^6.8.0",

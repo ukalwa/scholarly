@@ -1,19 +1,33 @@
 import * as scholarly from "../lib";
 
-import test from "ava";
+import anyTest, { TestInterface } from "ava";
 
-import randomWords = require("random-words");
+import MockAdapter from "axios-mock-adapter";
+import axios from "axios";
+import fs from "fs";
+
+const test = anyTest as TestInterface<{ mock: MockAdapter }>;
+
+test.before((t) => {
+  t.context.mock = new MockAdapter(axios, { delayResponse: 1000 });
+});
+
+test.afterEach((t) => {
+  t.context.mock.reset();
+});
+
+test.after((t) => {
+  t.context.mock.restore();
+});
 
 test("search should resolve and return an Array", async (t) => {
   try {
-    // Sending too many requests to google API is throwing a 429 error.
-    // Fix it by delaying the execution of next test
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-    const data = await scholarly.search(
-      randomWords({ exactly: 1, wordsPerString: 2 })[0]
-    );
+    t.context.mock
+      .onGet("https://scholar.google.com/scholar?hl=en&q=test%20api")
+      .reply(200, fs.readFileSync(__dirname + "/searchData.txt", "utf-8"));
+    const data = await scholarly.search("test api");
     // Retrieve first 10 results
-    Array.isArray(data) && data.length > 0
+    Array.isArray(data) && data.length === 10
       ? t.pass(`Number of results received: ${data.length}`)
       : t.fail("Number of results != 10");
   } catch (e) {
@@ -26,17 +40,10 @@ test("search should resolve and return an Array", async (t) => {
 
 test("user profile search should resolve and return an Array", async (t) => {
   try {
-    const users = [
-      "llxuy7kAAAAJ",
-      "H18-9fkAAAAJ",
-      "JCmLp2kAAAAJ",
-      "_WCWcNAAAAAJ",
-      "caYyccYAAAAJ",
-    ];
-    const data = await scholarly.user(
-      users[Math.floor(Math.random() * users.length)]
-    );
-    if (!data) t.fail("Unable to access google scholar website");
+    t.context.mock
+      .onGet("https://scholar.google.com/citations?hl=en&user=test-user")
+      .reply(200, fs.readFileSync(__dirname + "/profileData.txt", "utf-8"));
+    const data = await scholarly.user("test-user");
     Array.isArray(data) && data.length > 0 ? t.pass() : t.fail();
   } catch (e) {
     // Ignore error due to Rate Limiting (too many requests in succession) by Google APIs
