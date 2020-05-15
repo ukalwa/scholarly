@@ -52,3 +52,42 @@ test("user profile search should resolve and return an Array", async (t) => {
     }
   }
 });
+
+test("throw error if the query is empty", async (t) => {
+  try {
+    const _ = await scholarly.search("");
+  } catch (e) {
+    if (e instanceof Error) {
+      e.message === "Query cannot be empty!" ? t.pass() : t.fail();
+    }
+  }
+  try {
+    const _ = await scholarly.user("");
+  } catch (e) {
+    if (e instanceof Error) {
+      e.message === "User cannot be empty!" ? t.pass() : t.fail();
+    }
+  }
+});
+
+test("Network connectivity error", async (t) => {
+  t.context.mock
+    .onGet("https://scholar.google.com/citations?hl=en&user=dummy-user")
+    .reply(404, "Not found error")
+    .onGet("https://scholar.google.com/scholar?hl=en&q=dummy%20api")
+    .reply(404, "Not found error");
+  try {
+    const _ = await scholarly.search("dummy api");
+  } catch (e) {
+    if (e instanceof Error) {
+      e.message.indexOf("404") !== -1 ? t.pass() : t.fail();
+    }
+  }
+  try {
+    const _ = await scholarly.user("dummy-user");
+  } catch (e) {
+    if (e instanceof Error) {
+      e.message.indexOf("404") !== -1 ? t.pass() : t.fail();
+    }
+  }
+});

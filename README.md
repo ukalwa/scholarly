@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/ukalwa/scholarly.svg?branch=master)](https://travis-ci.org/ukalwa/scholarly)
 [![codecov](https://codecov.io/gh/ukalwa/scholarly/branch/master/graph/badge.svg)](https://codecov.io/gh/ukalwa/scholarly)
+[![npm](https://img.shields.io/npm/v/scholarly)](https://www.npmjs.com/package/scholarly)
+[![npm](https://img.shields.io/npm/dw/scholarly)](https://www.npmjs.com/package/scholarly)
 
 A Node.js module to fetch and parse academic articles from Google Scholar.
 
@@ -100,6 +102,12 @@ The search would result in a list of articles.
 ## Testing
 
 The module can be tested by running `npm run test`
+
+## To-Do
+
+- [ ] Replace Cheerio + axios with jsdom to run scripts on the page
+- [ ] Explore a way to test JSDOM without hitting API in tests (`NODE_ENV === "production" ? jsdom.fromURL : jsdom.fromFile` maybe?)
+- [ ] Add Microsoft Academic for fetching academic articles
 
 ## Acknowledgements
 
