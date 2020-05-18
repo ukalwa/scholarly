@@ -2,7 +2,7 @@ import { IArticle, IHTMLTags } from "../interfaces";
 
 import axios from "axios";
 import { parseScholarArticle } from "./search";
-import { parseUserArticle } from "./user";
+import { scrapeProfile, parseUserArticle } from "./user";
 
 /**
  *
@@ -29,6 +29,8 @@ class GoogleScholar {
     authors: ".gs_gray",
     year: ".gsc_a_y",
     citations: ".gsc_a_c",
+    modalField: ".gsc_vcd_field",
+    modalValue: ".gsc_vcd_value",
   };
 
   /**
@@ -69,6 +71,21 @@ class GoogleScholar {
     // Get HTML string
     const data: string = result.data;
     articles = parseUserArticle(data, this.userTags);
+    return articles;
+  };
+
+  /**
+   *
+   *
+   * @param {string} profile
+   */
+  userV2 = async (profile: string): Promise<IArticle[]> => {
+    let articles: IArticle[] = [];
+    if (profile === "") {
+      throw new Error("User cannot be empty!");
+    }
+    const profileUrl = encodeURI(`/citations?hl=en&user=${profile}`);
+    articles = await scrapeProfile(this.baseUrl + profileUrl, this.userTags);
     return articles;
   };
 }

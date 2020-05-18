@@ -10,6 +10,7 @@
     "lint": "eslint ./lib/**/*.ts ./tests/**/*.ts --fix",
     "prebuild": "npm run lint && npm run test",
     "build": "npm run clean && tsc",
+    "start": "npm run clean && tsc && node .",
     "tsc:w": "tsc -w",
     "prepublishOnly": "npm run build",
     "report-coverage": "nyc report --reporter=text-lcov > coverage/coverage.lcov && codecov"
@@ -34,6 +35,7 @@
   "homepage": "https://github.com/ukalwa/scholarly#readme",
   "devDependencies": {
     "@types/cheerio": "^0.22.18",
+    "@types/jsdom": "^16.2.3",
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
     "ava": "^3.8.1",
@@ -44,6 +46,7 @@
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.3",
     "nyc": "^15.0.1",
+    "parse5": "^6.0.0",
     "prettier": "^2.0.5",
     "random-words": "^1.1.1",
     "rimraf": "^3.0.2",
@@ -52,7 +55,8 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
-    "cheerio": "^1.0.0-rc.3"
+    "cheerio": "^1.0.0-rc.3",
+    "jsdom": "^16.2.2"
   },
   "ava": {
     "verbose": true,
@@ -81,6 +85,7 @@
     "instrument": true
   },
   "files": [
-    "dist/lib"
+    "dist/lib/*",
+    "!*.map"
   ]
 }

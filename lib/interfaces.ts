@@ -47,4 +47,6 @@ export interface IHTMLTags {
   pdf?: string;
   year?: string;
   citations?: string;
+  modalField?: string;
+  modalValue?: string;
 }
