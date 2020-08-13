@@ -2,14 +2,13 @@
   "name": "scholarly",
   "version": "1.0.18",
   "description": "A library to query and parse academic articles from Google Scholar",
-  "main": "./dist/lib/index.js",
-  "types": "./dist/lib/index.d.ts",
+  "main": "./dist/index.js",
   "scripts": {
-    "test": "yarn clean && nyc ava",
+    "test": "nyc ava",
     "clean": "rimraf dist coverage .nyc_output",
     "lint": "eslint . --ext .ts --fix",
     "prebuild": "yarn lint && yarn test",
-    "build": "yarn clean && tsc",
+    "build": "yarn clean && tsc -p tsconfig.build.json",
     "tsc:w": "tsc -w",
     "prepublishOnly": "yarn build",
     "test:report": "nyc report --reporter=text-lcov > coverage/coverage.lcov && codecov"

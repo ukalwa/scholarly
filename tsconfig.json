@@ -1,5 +1,5 @@
 {
-  "include": ["./lib/**/*.ts", "./tests/**/*.ts"],
+  "include": ["./src/**/*.ts", "./tests/**/*.ts"],
   "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     /* Basic Options */

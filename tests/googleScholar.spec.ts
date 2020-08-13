@@ -1,4 +1,4 @@
-import * as scholarly from "../lib";
+import * as scholarly from "../src";
 
 import anyTest, { TestInterface } from "ava";
 
