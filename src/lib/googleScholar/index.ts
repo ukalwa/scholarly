@@ -11,8 +11,8 @@ import { parseUserArticle } from "./user";
  * @extends {ArticleParser}
  */
 class GoogleScholar {
-  baseUrl = "https://scholar.google.com";
-  searchTags: IHTMLTags = {
+  static baseUrl = "https://scholar.google.com";
+  static searchTags: IHTMLTags = {
     results: ".gs_r",
     title: ".gs_ri h3 a",
     url: ".gs_ri h3 a",
@@ -22,7 +22,7 @@ class GoogleScholar {
     pdf: ".gs_ggsd a",
   };
 
-  userTags: IHTMLTags = {
+  static userTags: IHTMLTags = {
     results: ".gsc_a_tr",
     title: ".gsc_a_t a",
     url: ".gs_ri h3 a",
@@ -36,18 +36,18 @@ class GoogleScholar {
    *
    * @param {string} query
    */
-  search = async (query: string): Promise<IArticle[]> => {
+  static search = async (query: string): Promise<IArticle[]> => {
     let articles: IArticle[] = [];
     if (query === "") {
       throw new Error("Query cannot be empty!");
     }
     const searchUrl = encodeURI(`/scholar?hl=en&q=${query}`);
-    const result = await axios.get(this.baseUrl + searchUrl);
+    const result = await axios.get(GoogleScholar.baseUrl + searchUrl);
     if (result.status !== 200) {
       throw new Error(result.statusText);
     }
     const data: string = result.data;
-    articles = parseScholarArticle(data, this.searchTags);
+    articles = parseScholarArticle(data, GoogleScholar.searchTags);
     return articles;
   };
 
@@ -56,22 +56,21 @@ class GoogleScholar {
    *
    * @param {string} profile
    */
-  user = async (profile: string): Promise<IArticle[]> => {
+  static user = async (profile: string): Promise<IArticle[]> => {
     let articles: IArticle[] = [];
     if (profile === "") {
       throw new Error("User cannot be empty!");
     }
     const profileUrl = encodeURI(`/citations?hl=en&user=${profile}`);
-    const result = await axios.get(this.baseUrl + profileUrl);
+    const result = await axios.get(GoogleScholar.baseUrl + profileUrl);
     if (result.status !== 200) {
       throw new Error(result.statusText);
     }
     // Get HTML string
     const data: string = result.data;
-    articles = parseUserArticle(data, this.userTags);
+    articles = parseUserArticle(data, GoogleScholar.userTags);
     return articles;
   };
 }
 
-const googleScholar = new GoogleScholar();
-export default googleScholar;
+export default GoogleScholar;
