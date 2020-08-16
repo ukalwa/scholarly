@@ -43,9 +43,6 @@ class GoogleScholar {
     }
     const searchUrl = encodeURI(`/scholar?hl=en&q=${query}`);
     const result = await axios.get(GoogleScholar.baseUrl + searchUrl);
-    if (result.status !== 200) {
-      throw new Error(result.statusText);
-    }
     const data: string = result.data;
     articles = parseScholarArticle(data, GoogleScholar.searchTags);
     return articles;
@@ -63,9 +60,6 @@ class GoogleScholar {
     }
     const profileUrl = encodeURI(`/citations?hl=en&user=${profile}`);
     const result = await axios.get(GoogleScholar.baseUrl + profileUrl);
-    if (result.status !== 200) {
-      throw new Error(result.statusText);
-    }
     // Get HTML string
     const data: string = result.data;
     articles = parseUserArticle(data, GoogleScholar.userTags);

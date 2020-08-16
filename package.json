@@ -4,14 +4,15 @@
   "description": "A library to query and parse academic articles from Google Scholar",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "nyc ava",
-    "clean": "rimraf dist coverage .nyc_output",
+    "test": "jest",
+    "clean": "rimraf dist coverage",
     "lint": "eslint . --ext .ts --fix",
     "prebuild": "yarn lint && yarn test",
     "build": "yarn clean && tsc -p tsconfig.build.json",
     "tsc:w": "tsc -w",
     "prepack": "yarn build",
-    "test:report": "nyc report --reporter=text-lcov > coverage/coverage.lcov && codecov"
+    "test:coverage": "jest --coverage",
+    "report": "codecov"
   },
   "repository": {
     "type": "git",
@@ -36,14 +37,11 @@
     "@types/jest": "^26.0.9",
     "@typescript-eslint/eslint-plugin": "^3.9.0",
     "@typescript-eslint/parser": "^3.9.0",
-    "ava": "^3.8.1",
-    "axios-mock-adapter": "^1.18.1",
     "codecov": "^3.6.5",
     "eslint": "^7.6.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
     "jest": "^26.4.0",
-    "nyc": "^15.0.1",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
     "ts-jest": "^26.2.0",
@@ -53,32 +51,6 @@
   "dependencies": {
     "axios": "^0.19.2",
     "cheerio": "^1.0.0-rc.3"
-  },
-  "ava": {
-    "verbose": true,
-    "extensions": [
-      "ts"
-    ],
-    "require": [
-      "ts-node/register"
-    ]
-  },
-  "nyc": {
-    "include": [
-      "src/**/*.ts"
-    ],
-    "extension": [
-      ".ts"
-    ],
-    "require": [
-      "ts-node/register"
-    ],
-    "reporter": [
-      "text-summary",
-      "html"
-    ],
-    "sourceMap": true,
-    "instrument": true
   },
   "files": [
     "dist"

@@ -25,7 +25,7 @@ export const splitVolumeIssueString = (
         output.volume = parseInt(value);
       } else {
         output.issue = parseInt(value);
-        return output;
+        break;
       }
       value = "";
     } else {

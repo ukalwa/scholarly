@@ -62,18 +62,15 @@ const _parseFooterLinks = (
   $(div).each((_, el) => {
     if ($) {
       const href = $(el).attr("href");
-      if (!href) {
-        return;
-      }
-      if (href.indexOf("/scholar?cites") >= 0) {
+      if (href && href.indexOf("/scholar?cites") >= 0) {
         const citationCountPrefix = "Cited by ";
         article.citationUrl = baseUrl + href;
         article.numCitations = parseInt(
           $(el).text().substr(citationCountPrefix.length)
         );
-      } else if (href.indexOf("/scholar?q=related") >= 0) {
+      } else if (href && href.indexOf("/scholar?q=related") >= 0) {
         article.relatedUrl = baseUrl + href;
-      } else if (href.indexOf("/scholar?cluster") >= 0) {
+      } else if (href && href.indexOf("/scholar?cluster") >= 0) {
         article.urlVersionsList = baseUrl + href;
       }
     }
