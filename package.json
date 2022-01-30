@@ -1,6 +1,6 @@
 {
   "name": "scholarly",
-  "version": "1.0.18",
+  "version": "1.0.20",
   "description": "A library to query and parse academic articles from Google Scholar",
   "main": "./dist/index.js",
   "scripts": {
