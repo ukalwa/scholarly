@@ -1,12 +1,12 @@
 import * as scholarly from "../src";
 
-import anyTest, { TestInterface } from "ava";
+import anyTest, { TestFn } from "ava";
 
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
 import fs from "fs";
 
-const test = anyTest as TestInterface<{ mock: MockAdapter }>;
+const test = anyTest as TestFn<{ mock: MockAdapter }>;
 
 test.before((t) => {
   t.context.mock = new MockAdapter(axios, { delayResponse: 1000 });
