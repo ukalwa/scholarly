@@ -247,10 +247,10 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
-"@types/cheerio@0.22.18":
-  version "0.22.18"
-  resolved "https://registry.yarnpkg.com/@types/cheerio/-/cheerio-0.22.18.tgz#19018dceae691509901e339d63edf1e935978fe6"
-  integrity sha512-Fq7R3fINAPSdUEhOyjG4iVxgHrOnqDJbY0/BUuiN0pvD/rfmZWekVZnv+vcs8TtpA2XF50uv50LaE4EnpEL/Hw==
+"@types/cheerio@0.22.31":
+  version "0.22.31"
+  resolved "https://registry.yarnpkg.com/@types/cheerio/-/cheerio-0.22.31.tgz#b8538100653d6bb1b08a1e46dec75b4f2a5d5eb6"
+  integrity sha512-Kt7Cdjjdi2XWSfrZ53v4Of0wG3ZcmaegFXjMmz9tfNrZSkzzo36G0AL1YqSdcIA78Etjt6E609pt5h1xnQkPUw==
   dependencies:
     "@types/node" "*"
 
