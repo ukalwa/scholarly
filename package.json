@@ -38,7 +38,7 @@
     "ava": "^4.0.1",
     "axios-mock-adapter": "^1.18.1",
     "codecov": "^3.6.5",
-    "eslint": "^7.6.0",
+    "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "nyc": "^15.0.1",
